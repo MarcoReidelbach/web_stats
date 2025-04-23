@@ -39,6 +39,7 @@ time.sleep(10)
 # Accept cookies if banner appears
 try:
     driver.find_element("id", "cmpbntyestxt").click()
+    print('OK')
 except:
     pass
 
@@ -50,6 +51,7 @@ driver.find_element(By.XPATH, "//input[@value='Absenden']").click()
 # Go to members list page
 driver.get("https://www.moonsault.de/members-list/?pageNo=1&sortField=activityPoints&sortOrder=DESC")
 soup = BeautifulSoup(driver.page_source)
+print(soup)
 pages = int(re.search('data-pages="(.+?)"', str(soup.find("nav", {"class": "pagination"}))).group(1))
 
 # Initialize lists
