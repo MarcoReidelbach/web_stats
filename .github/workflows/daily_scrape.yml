@@ -1,0 +1,40 @@
+name: Daily Data Scraper
+
+on:
+  schedule:
+    - cron: '0 22 * * *'  # CET → Midnight in Germany during summer
+  workflow_dispatch:
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: Install dependencies
+      run: |
+        sudo apt update
+        sudo apt install -y chromium-chromedriver
+        pip install -r requirements.txt
+
+    - name: Run scraping script
+      env:
+        LOGIN_USERNAME: ${{ secrets.LOGIN_USERNAME }}
+        LOGIN_PASSWORD: ${{ secrets.LOGIN_PASSWORD }}
+      run: python get_data.py
+
+    - name: Commit and push results
+      run: |
+        git config user.name "github-actions"
+        git config user.email "github-actions@github.com"
+        git add raw_data/
+        git commit -m "Daily update for $(date '+%d.%m.%Y')" || echo "Nothing to commit"
+        git push https://x-access-token:${{ secrets.GH_PAT }}@github.com/${{ github.repository }}.git HEAD:main
+
