@@ -19,16 +19,16 @@ results = []
 for i in range((end_date - start_date).days + 1):
     date_old = start_date + timedelta(days=i)
     date_new = date_old + timedelta(days=1)
-
+    
     str_old = date_old.strftime("%d.%m.%Y")
     str_new = date_new.strftime("%d.%m.%Y")
 
-    file_old = f"raw_data_test/{str_old}.pkl"
-    file_new = f"raw_data_test/{str_new}.pkl"
-
+    file_old = f"raw_data/{str_old}.pkl"
+    file_new = f"raw_data/{str_new}.pkl"
+    
     if not (os.path.exists(file_old) and os.path.exists(file_new)):
         continue
-
+    
     dold = pd.read_pickle(file_old)
     dnew = pd.read_pickle(file_new)
 

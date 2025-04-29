@@ -53,7 +53,16 @@ soup = BeautifulSoup(driver.page_source)
 
 time.sleep(60)
 
-pages = int(re.search('data-pages="(.+?)"', str(soup.find("nav", {"class": "pagination"}))).group(1))
+# Get Number of Pages
+for i in range(10):
+    try:
+        pages = int(re.search('data-pages="(.+?)"', str(soup.find("nav", {"class": "pagination"}))).group(1))
+        break
+    except Exception as e:
+        print(f"Attempt {i+1}: Page not ready. Retrying in 60s... Error: {e}")
+        time.sleep(60)
+else:
+    raise Exception("Failed to retrieve number of pages after multiple retries.")
 
 # Initialize lists
 usr_name, usr_id, post_no, reac_no, troph_no = [], [], [], [], []
