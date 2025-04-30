@@ -48,21 +48,24 @@ driver.find_element("id", "password").send_keys(password)
 driver.find_element(By.XPATH, "//input[@value='Absenden']").click()
 
 # Go to members list page
-driver.get("https://www.moonsault.de/members-list/?pageNo=1&sortField=activityPoints&sortOrder=DESC")
-soup = BeautifulSoup(driver.page_source)
-
-time.sleep(60)
+max_attempts = 5
+for attempt in range(max_attempts):
+    try:
+        driver.get("https://www.moonsault.de/members-list/?pageNo=1&sortField=activityPoints&sortOrder=DESC")
+        WebDriverWait(driver, 120).until(
+            EC.presence_of_element_located((By.CSS_SELECTOR, "nav.pagination"))
+        )
+        soup = BeautifulSoup(driver.page_source, 'html.parser')
+        break  # Exit loop if successful
+    except Exception as e:
+        print(f"Attempt {attempt + 1} failed: {e}")
+        time.sleep(10)  # Wait before retrying
+else:
+    driver.save_screenshot("fail.png")
+    raise Exception("Failed to load members list page after multiple attempts.")
 
 # Get Number of Pages
-for i in range(10):
-    try:
-        pages = int(re.search('data-pages="(.+?)"', str(soup.find("nav", {"class": "pagination"}))).group(1))
-        break
-    except Exception as e:
-        print(f"Attempt {i+1}: Page not ready. Retrying in 60s... Error: {e}")
-        time.sleep(60)
-else:
-    raise Exception("Failed to retrieve number of pages after multiple retries.")
+pages = int(re.search('data-pages="(.+?)"', str(soup.find("nav", {"class": "pagination"}))).group(1)
 
 # Initialize lists
 usr_name, usr_id, post_no, reac_no, troph_no = [], [], [], [], []
