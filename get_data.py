@@ -65,7 +65,7 @@ else:
     raise Exception("Failed to load members list page after multiple attempts.")
 
 # Get Number of Pages
-pages = int(re.search('data-pages="(.+?)"', str(soup.find("nav", {"class": "pagination"}))).group(1)
+pages = int(re.search('data-pages="(.+?)"', str(soup.find("nav", {"class": "pagination"}))).group(1))
 
 # Initialize lists
 usr_name, usr_id, post_no, reac_no, troph_no = [], [], [], [], []
