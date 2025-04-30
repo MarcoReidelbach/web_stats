@@ -1,8 +1,8 @@
 import pandas as pd
 
 # Load Data
-data_old="01.03.2025"
-data_new="01.04.2025"
+data_old="01.04.2025"
+data_new="30.04.2025"
 
 # 'Remove' lists User that don't want to appear in the statistics, stored in external remove file
 try:
