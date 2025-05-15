@@ -206,7 +206,6 @@ for _, row in reaction_change.iterrows():
         seen_reaction = set()
     
     reactions_given.append(len(seen_reaction) if seen_reaction else '-')
-    print(row["User Name new"], row["User ID"], reactions_given[-1], time.time()-start)
 
 # Save to file
 os.makedirs("raw_data", exist_ok=True)
