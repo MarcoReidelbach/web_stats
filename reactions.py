@@ -211,7 +211,7 @@ for _, row in reaction_change.iterrows():
 os.makedirs("raw_data", exist_ok=True)
 data = pd.DataFrame({
     'User ID': row["User ID"],
-    'User Name': row["User Name"],
+    'User Name': row["User Name new"],
     'Given Reaction': reactions_given
 })
 data.to_pickle(f"raw_data/{target_month:02d}_{target_year}_reactions_given.pkl")
