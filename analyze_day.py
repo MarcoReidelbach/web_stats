@@ -10,8 +10,8 @@ except FileNotFoundError:
     print("Warning: 'remove' not found. No users will be removed.")
     Remove = []
 
-start_date = datetime.strptime("01.04.2025", "%d.%m.%Y")
-end_date = datetime.strptime("30.04.2025", "%d.%m.%Y")
+start_date = datetime.strptime("01.05.2025", "%d.%m.%Y")
+end_date = datetime.strptime("31.05.2025", "%d.%m.%Y")
 
 results = []
 
