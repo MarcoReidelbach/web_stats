@@ -198,7 +198,6 @@ for _, row in reaction_change.iterrows():
                 soup = BeautifulSoup(driver.page_source, 'html.parser')  # still try to parse what you can
     
         finally:
-            seen_reaction = set()
             if len(driver.window_handles) > 1:
                 driver.close()
                 driver.switch_to.window(driver.window_handles[0])
@@ -214,4 +213,4 @@ data = pd.DataFrame({
     'User Name': row["User Name new"],
     'Given Reaction': reactions_given
 })
-data.to_pickle(f"raw_data/{target_month:02d}_{target_year}_reactions_given.pkl")
+data.to_pickle(f"raw_data/{target_month:02d}.{target_year}_RG.pkl")
