@@ -69,7 +69,7 @@ reaction_change['Change'] = reaction_change['NoR_new'] - reaction_change['NoR_ol
 reaction_change = reaction_change[~reaction_change['User ID'].isin(Remove)]
 
 # --- Limit to top 100 by Change ---
-reaction_change = reaction_change.sort_values('Change', ascending=False).head(1).reset_index(drop=True)
+reaction_change = reaction_change.sort_values('Change', ascending=False).head(100).reset_index(drop=True)
 
 # Instantiate options
 opts = Options()
