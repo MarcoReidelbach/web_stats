@@ -2,7 +2,7 @@ import pandas as pd
 
 # Load Data
 data_old="01.04.2025"
-data_new="30.04.2025"
+data_new="01.05.2025"
 
 # 'Remove' lists User that don't want to appear in the statistics, stored in external remove file
 try:
@@ -12,7 +12,7 @@ except FileNotFoundError:
     print("Warning: 'remove' not found. No users will be removed.")
     Remove = []
 
-top=175
+top=100
 
 dold=pd.read_pickle("raw_data/"+data_old+".pkl")
 dnew=pd.read_pickle("raw_data/"+data_new+".pkl")
