@@ -6,36 +6,68 @@ on:
   workflow_dispatch:
 
 jobs:
-  run-reactions:
+  run-chunks:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        chunk: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
+      fail-fast: false
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y chromium-chromedriver
+          pip install --upgrade pip setuptools wheel
+          pip install --force-reinstall --no-cache-dir -r requirements.txt
+
+      - name: Run reactions chunk
+        env:
+          LOGIN_USERNAME: ${{ secrets.LOGIN_USERNAME }}
+          LOGIN_PASSWORD: ${{ secrets.LOGIN_PASSWORD }}
+        run: |
+          CHUNK=${{ matrix.chunk }}
+          START=$(( CHUNK * 5 ))
+          END=$(( START + 5 ))
+          mkdir -p tmp
+          python reactions.py --start $START --end $END --out tmp/chunk_${CHUNK}.pkl
+
+  merge-results:
+    needs: run-chunks
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repo
-      uses: actions/checkout@v3
+      - name: Checkout repo
+        uses: actions/checkout@v3
 
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.10'
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
 
-    - name: Install dependencies
-      run: |
-        sudo apt update
-        sudo apt install -y chromium-chromedriver
-        pip install --upgrade pip setuptools wheel
-        pip install --force-reinstall --no-cache-dir -r requirements.txt
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip setuptools wheel
+          pip install pandas
 
-    - name: Run reactions script
-      env:
-        LOGIN_USERNAME: ${{ secrets.LOGIN_USERNAME }}
-        LOGIN_PASSWORD: ${{ secrets.LOGIN_PASSWORD }}
-      run: python reactions.py
+      - name: Merge all chunked results
+        run: |
+          mkdir -p tmp raw_data
+          python merge_chunks.py
 
-    - name: Commit and push results
-      run: |
-        git config user.name "github-actions"
-        git config user.email "github-actions@github.com"
-        git add raw_data/
-        git commit -m "Monthly update for $(date '+%d.%m.%Y')" || echo "Nothing to commit"
-        git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git HEAD:main
+      - name: Commit and push merged results
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add raw_data/
+          git commit -m "Monthly update for $(date '+%d.%m.%Y')" || echo "Nothing to commit"
+          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git HEAD:main
 

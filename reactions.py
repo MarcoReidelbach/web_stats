@@ -8,9 +8,10 @@ from bs4 import BeautifulSoup
 import re
 import os
 import pandas as pd
-import time
+import argparse
 from datetime import datetime, timedelta
 import pytz
+import time
 
 # --- Load 'Remove' List ---
 try:
@@ -19,6 +20,13 @@ try:
 except FileNotFoundError:
     print("Warning: 'remove' not found. No users will be removed.")
     Remove = []
+    
+# --- Argument parser ---
+parser = argparse.ArgumentParser()
+parser.add_argument("--start", type=int, required=True)
+parser.add_argument("--end", type=int, required=True)
+parser.add_argument("--out", type=str, required=True)
+args = parser.parse_args()
 
 # Get login info from environment variables
 username = os.getenv("LOGIN_USERNAME")
@@ -71,6 +79,9 @@ reaction_change = reaction_change[~reaction_change['User ID'].isin(Remove)]
 # --- Limit to top 100 by Change ---
 reaction_change = reaction_change.sort_values('Change', ascending=False).head(100).reset_index(drop=True)
 
+# --- Slice by start/end ---
+users = reaction_change.iloc[args.start:args.end].reset_index(drop=True)
+
 # Instantiate options
 opts = Options()
 opts.add_argument("--headless")  # Run headless on GitHub Actions
@@ -119,7 +130,7 @@ else:
 # Initialize lists
 usr_name, usr_id, reactions_given = [], [], []
 
-for _, row in reaction_change.iterrows():
+for _, row in users.iterrows():
     print(row['User Name new'])
     profile_url = f'https://www.moonsault.de/user/{row["User ID"]}/#likes' 
 
@@ -207,10 +218,11 @@ for _, row in reaction_change.iterrows():
     reactions_given.append(len(seen_reaction) if seen_reaction else '-')
 
 # Save to file
-os.makedirs("raw_data", exist_ok=True)
+oos.makedirs(os.path.dirname(args.out), exist_ok=True)  # ensure output dir exists
+
 data = pd.DataFrame({
     'User ID': row["User ID"],
     'User Name': row["User Name new"],
     'Given Reaction': reactions_given
 })
-data.to_pickle(f"raw_data/{target_month:02d}.{target_year}_RG.pkl")
+data.to_pickle(args.out)
