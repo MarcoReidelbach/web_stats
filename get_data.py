@@ -111,5 +111,5 @@ data = pd.DataFrame({
     'Number of Reactions': reac_no,
     'Number of Trophies': troph_no
 })
-data.to_pickle(f"raw_data/{query_day}.pkl")
+data.to_pickle(f"raw_data/{query_day}_test.pkl")
 
