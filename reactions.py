@@ -218,7 +218,7 @@ for _, row in users.iterrows():
     reactions_given.append(len(seen_reaction) if seen_reaction else '-')
 
 # Save to file
-oos.makedirs(os.path.dirname(args.out), exist_ok=True)  # ensure output dir exists
+os.makedirs(os.path.dirname(args.out), exist_ok=True)  # ensure output dir exists
 
 data = pd.DataFrame({
     'User ID': row["User ID"],
