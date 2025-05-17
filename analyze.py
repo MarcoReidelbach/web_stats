@@ -1,8 +1,9 @@
 import pandas as pd
 
 # Load Data
-data_old="01.04.2025"
-data_new="01.05.2025"
+month_old="04"
+month_new="05"
+year = "2025"
 
 # 'Remove' lists User that don't want to appear in the statistics, stored in external remove file
 try:
@@ -14,8 +15,10 @@ except FileNotFoundError:
 
 top=100
 
-dold=pd.read_pickle("raw_data/"+data_old+".pkl")
-dnew=pd.read_pickle("raw_data/"+data_new+".pkl")
+dold = pd.read_pickle(f"raw_data/01.{month_old}.{year}.pkl")
+dnew = pd.read_pickle(f"raw_data/01.{month_new}.{year}.pkl")
+
+rgiven = pd.read_pickle(f"raw_data/{month_old}.{year}_RG.pkl") 
 
 # Remove 'Not Defined' Users aka Users without Posts and Reactions
 dold=dold[dold['User Name'] != 'Not Defined']
@@ -69,6 +72,8 @@ reaction_change=pd.merge(dnew[['User ID','User Name','Number of Reactions']].ren
 reaction_change['NoR_old']=reaction_change['NoR_old'].fillna(0)
 reaction_change=reaction_change.eval('Change = NoR_new - NoR_old').sort_values('Change',ascending=False).reset_index()
 
+rgiven_sorted = rgiven.set_index('User ID').loc[reaction_change['User ID'].head(100)].reset_index()
+
 # Number of posts/reactions per User in period
 usr_with_posting_in_period=post_change['Change'][post_change['Change']>0].count()
 number_of_posts_in_period=int(post_change['Change'][post_change['Change']>0].sum())
@@ -87,10 +92,17 @@ reaction_total_old=reaction_total_old[~reaction_total_old['User ID'].isin(Remove
 print(
 """Die aktuellen Userstatistiken.
 
-Abgefragt wird der Zeitraum vom """+data_old+""" bis zum """+data_new+""".
+Vorab: Ab diesem Monat gibt es unabhängig von der Spendensumme nur noch die jeweiligen Top 100s.
+
+Abgefragt wird der Zeitraum vom 01."""+month_old+"""."""+year+""" bis zum 01."""+month_new+"""."""+year+""".
 
 Es gibt insgesamt """+f'{usr_with_posting:,}'.replace(',','.')+""" User mit Postings, diesen Monat haben davon """+f'{usr_with_posting_in_period:,}'.replace(",",".")+""" User gepostet.
 Wir haben in unserer Datenbank insgesamt """+ f'{number_of_posts:,}'.replace(",",".")+""" Postings, davon wurden in diesem Monat """+f'{number_of_posts_in_period:,}'.replace(",",".")+""" abgegeben.
+
+Hier die Top Poster des Tages:
+
+INSERT TOP POSTER
+
 
 Hier die Top """+str(top)+""" aus diesem Monat:
 """)
@@ -149,12 +161,13 @@ print(
 Es gibt insgesamt """+f'{usr_with_reaction:,}'.replace(",",".")+""" User, die Reaktionen erhalten haben. Diesen Monat haben davon """+f'{usr_with_reaction_in_period:,}'.replace(",",".")+""" User Reaktionen erhalten.
 Wir haben in unserer Datenbank insgesamt """+ f'{number_of_reactions:,}'.replace(",",".")+""" Reaktionen, davon wurden in diesem Monat """+f'{number_of_reactions_in_period:,}'.replace(",",".")+""" abgegeben.
 
-Hier die Top """+str(top)+""" aus diesem Monat:
+Hier die Top """+str(top)+""" aus diesem Monat (in Klammern zusätzlich die Anzahl an vergebenen Reaktionen):
 """)
 
 count=0
 for i in range(top):
     num=int(reaction_change.at[i,'Change'])
+    rea=rgiven_sorted.at[i,'Given Reaction']
     # Same rank for users with identical numbers
     if i>0:
         num_old=int(reaction_change.at[i-1,'Change'])
@@ -166,7 +179,7 @@ for i in range(top):
             count=0
     else:
         I=i+1
-    print(str(I)+'. '+reaction_change.at[i,'User Name new']+' - '+f'{num:,}'.replace(",","."))
+    print(str(I)+'. '+reaction_change.at[i,'User Name new']+' - '+f'{num:,}'.replace(",",".")+f' ({rea})')
 
 print(
 '''
