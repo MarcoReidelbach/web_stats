@@ -214,15 +214,17 @@ for _, row in users.iterrows():
                 driver.switch_to.window(driver.window_handles[0])
     else:
         seen_reaction = set()
-    
+
+    usr_id.append(row["User ID"]) 
+    usr_name.append(row["User Name new"])
     reactions_given.append(len(seen_reaction) if seen_reaction else '-')
 
 # Save to file
 os.makedirs(os.path.dirname(args.out), exist_ok=True)  # ensure output dir exists
 
 data = pd.DataFrame({
-    'User ID': row["User ID"],
-    'User Name': row["User Name new"],
+    'User ID': usr_id,
+    'User Name': usr_name,
     'Given Reaction': reactions_given
 })
 data.to_pickle(args.out)

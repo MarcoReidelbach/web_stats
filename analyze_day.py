@@ -48,7 +48,7 @@ for i in range((end_date - start_date).days + 1):
     post_change = post_change.eval('Change = NoP_new - NoP_old').sort_values('Change', ascending=False).reset_index(drop=True)
 
     post_change = post_change[~post_change['User ID'].isin(Remove)].reset_index(drop=True)
-
+    
     if not post_change.empty:
         top_change = post_change['Change'].max()
         top_users = post_change[post_change['Change'] == top_change]['User Name new'].tolist()
