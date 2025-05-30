@@ -92,7 +92,11 @@ reaction_total_old=reaction_total_old[~reaction_total_old['User ID'].isin(Remove
 print(
 """Die aktuellen Userstatistiken.
 
-Vorab: Ab diesem Monat gibt es unabhängig von der Spendensumme nur noch die jeweiligen Top 100s.
+Ein paar kleine Änderungen:
+-unabhängig von Spendensumme nur die Top 100s
+-neue "Top Poster des Tages" Kategorie
+-Anzahl vergebener Reaktionen als Zusatzinfo 
+
 
 Abgefragt wird der Zeitraum vom 01."""+month_old+"""."""+year+""" bis zum 01."""+month_new+"""."""+year+""".
 
@@ -161,7 +165,8 @@ print(
 Es gibt insgesamt """+f'{usr_with_reaction:,}'.replace(",",".")+""" User, die Reaktionen erhalten haben. Diesen Monat haben davon """+f'{usr_with_reaction_in_period:,}'.replace(",",".")+""" User Reaktionen erhalten.
 Wir haben in unserer Datenbank insgesamt """+ f'{number_of_reactions:,}'.replace(",",".")+""" Reaktionen, davon wurden in diesem Monat """+f'{number_of_reactions_in_period:,}'.replace(",",".")+""" abgegeben.
 
-Hier die Top """+str(top)+""" aus diesem Monat (in Klammern zusätzlich die Anzahl an vergebenen Reaktionen):
+Hier die Top """+str(top)+""" aus diesem Monat:
+User - Erhaltenede Reaktionen (Vergebene Reaktionen)
 """)
 
 count=0
