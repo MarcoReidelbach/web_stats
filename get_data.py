@@ -40,6 +40,7 @@ time.sleep(10)
 try:
     driver.find_element("id", "cmpwelcomebtnyes").click()
 except:
+    print('COOKIES FAILED')
     pass
 
 # Login
