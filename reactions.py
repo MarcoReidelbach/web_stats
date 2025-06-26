@@ -99,11 +99,15 @@ driver.set_window_size(1920, 1080)
 driver.get("https://www.moonsault.de/login")
 time.sleep(10)
 
-# Accept cookies if banner appears
-try:
-    driver.find_element("id", "cmpbntyestxt").click()
-except:
-    pass
+# Accept Cookies is Shadow Host
+driver.execute_script("""
+const shadowHost = document.querySelector('#cmpwrapper');
+const shadowRoot = shadowHost.shadowRoot;
+const acceptBtn = shadowRoot.querySelector('.cmpboxbtnyes');
+acceptBtn.click();
+""")
+
+time.sleep(10)
 
 # Login
 driver.find_element("id", "username").send_keys(username)
