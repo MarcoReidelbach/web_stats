@@ -39,9 +39,8 @@ time.sleep(10)
 # Accept cookies if banner appears
 try:
     driver.find_element("id", "cmpwelcomebtnyes").click()
-except:
-    print('COOKIES FAILED')
-    pass
+except Exception as e:
+    print('COOKIES FAILED:', e)
 
 # Login
 driver.find_element("id", "username").send_keys(username)
