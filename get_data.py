@@ -36,7 +36,7 @@ driver = webdriver.Chrome(options=opts, service=service)
 driver.get("https://www.moonsault.de/login")
 time.sleep(10)
 
-# Accept Cookies is Shadow Host
+# Accept Cookies in Shadow Host
 driver.execute_script("""
 const shadowHost = document.querySelector('#cmpwrapper');
 const shadowRoot = shadowHost.shadowRoot;
