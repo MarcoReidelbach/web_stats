@@ -38,7 +38,7 @@ time.sleep(10)
 
 # Accept cookies if banner appears
 try:
-    driver.find_element("id", "cmpbntyestxt").click()
+    driver.find_element("id", "cmpwelcomebtnyes").click()
 except:
     pass
 

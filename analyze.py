@@ -1,8 +1,8 @@
 import pandas as pd
 
 # Load Data
-month_old="04"
-month_new="05"
+month_old="05"
+month_new="06"
 year = "2025"
 
 # 'Remove' lists User that don't want to appear in the statistics, stored in external remove file
@@ -92,12 +92,6 @@ reaction_total_old=reaction_total_old[~reaction_total_old['User ID'].isin(Remove
 print(
 """Die aktuellen Userstatistiken.
 
-Ein paar kleine Änderungen:
--unabhängig von Spendensumme nur die Top 100s
--neue "Top Poster des Tages" Kategorie
--Anzahl vergebener Reaktionen als Zusatzinfo 
-
-
 Abgefragt wird der Zeitraum vom 01."""+month_old+"""."""+year+""" bis zum 01."""+month_new+"""."""+year+""".
 
 Es gibt insgesamt """+f'{usr_with_posting:,}'.replace(',','.')+""" User mit Postings, diesen Monat haben davon """+f'{usr_with_posting_in_period:,}'.replace(",",".")+""" User gepostet.
@@ -166,7 +160,9 @@ Es gibt insgesamt """+f'{usr_with_reaction:,}'.replace(",",".")+""" User, die Re
 Wir haben in unserer Datenbank insgesamt """+ f'{number_of_reactions:,}'.replace(",",".")+""" Reaktionen, davon wurden in diesem Monat """+f'{number_of_reactions_in_period:,}'.replace(",",".")+""" abgegeben.
 
 Hier die Top """+str(top)+""" aus diesem Monat:
-User - Erhaltenede Reaktionen (Vergebene Reaktionen)
+
+User - Erhaltene Reaktionen (Vergebene Reaktionen*)
+* Ein „-” bedeutet: Entweder keine Reaktionen vergeben oder Profilansicht eingeschränkt.
 """)
 
 count=0
