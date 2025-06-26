@@ -38,9 +38,13 @@ time.sleep(10)
 
 # Accept cookies if banner appears
 try:
-    driver.find_element("id", "cmpwelcomebtnyes").click()
+    # Wait up to 10 seconds for the clickable element
+    WebDriverWait(driver, 10).until(
+        EC.element_to_be_clickable((By.CSS_SELECTOR, "a.cmpboxbtnyes"))
+    ).click()
+    print("Cookie banner accepted.")
 except Exception as e:
-    print('COOKIES FAILED:', e)
+    print(f"COOKIES FAILED: {e}")
 
 # Login
 driver.find_element("id", "username").send_keys(username)
